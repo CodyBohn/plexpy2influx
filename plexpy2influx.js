@@ -149,7 +149,10 @@ function onGetPlexPyLibraryData(response) {
     let libraryData = JSON.parse(response.body).response.data;
 
     libraryData.forEach(library => {
-        let value = { count: Number(library.count), childCount: Number(library.child_count) };
+        let value = { count: Number(library.count) };
+        if (library.child_count) {
+            value.childCount = Number(library.child_count)
+        }
         let tags = {
             type: library.section_type,
             section: library.section_name
