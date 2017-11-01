@@ -7,7 +7,8 @@ if (!process.env.PLEXPY_TOKEN) {
 const Influx = require('influx');
 const request = require('request-promise');
 
-const checkInterval = process.env.UPDATE_INTERVAL_MS || 1000 * 30;
+const checkInterval = process.env.UPDATE_INTERVAL_MS || 1000 * 60;
+const precision = process.env.INFLUX_PRECISION || 'm';
 
 const influxClient = new Influx.InfluxDB({
     host: process.env.INFLUX_HOST || 'localhost',
@@ -68,7 +69,9 @@ function writeToInflux(seriesName, values, tags) {
     return influxClient.writeMeasurement(seriesName, [{
         fields: values,
         tags: tags
-    }]);
+    }], {
+      precision: precision
+    });
 }
 
 function groupBy(data, key) {
